@@ -1,0 +1,96 @@
+/* Stonowane tło - gradient */
+.root {
+    -fx-font-family: "Arial";
+    -fx-background-color: linear-gradient(to bottom, #2193b0, #ebbe83);
+    /* Gradientowe tło */
+}
+
+/* Styl zakładek */
+.tab-pane {
+    -fx-tab-min-width: 100px;
+    -fx-tab-max-width: 150px;
+}
+
+/* Styl większych przycisków */
+.button {
+    -fx-padding: 12px 24px;
+    /* Większe przyciski */
+    -fx-font-size: 16px;
+    -fx-background-radius: 10px;
+}
+
+/* Styl etykiet */
+.label {
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+}
+
+/* Większe pole tekstowe */
+.text-field {
+    -fx-background-color: rgba(255, 255, 255, 0.9);
+    -fx-text-fill: #333333;
+    -fx-border-radius: 5px;
+    -fx-border-color: #cccccc;
+    -fx-padding: 10px;
+    -fx-font-size: 16px;
+    -fx-pref-width: 250px;
+    /* Większa szerokość */
+}
+
+/* Styl tabeli */
+.table-view {
+    -fx-background-color: rgba(255, 255, 255, 0.8);
+    -fx-border-radius: 8px;
+    -fx-border-color: #cccccc;
+}
+
+/* Styl nagłówków tabeli */
+.table-view .column-header-background {
+    -fx-background-color: #4ca1af;
+    /* Kolor nagłówka tabeli */
+}
+
+.table-view .column-header {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+/* Naprawiony styl głównej listy wyboru (ChoiceBox) */
+.choice-box {
+    -fx-background-color: #ffffff;
+    /* Białe tło */
+    -fx-text-fill: #333333;
+    -fx-border-radius: 5px;
+    -fx-border-color: #888888;
+    -fx-font-size: 16px;
+}
+
+/* Naprawiona widoczność tekstu w wyborze opcji */
+.choice-box .label {
+    -fx-text-fill: #333333 !important;
+    /* Ciemny tekst */
+    -fx-font-weight: bold;
+}
+
+/* Opcje rozwijanego menu */
+.choice-box .context-menu {
+    -fx-background-color: #ffffff !important;
+    /* Wymuszenie białego tła */
+}
+
+/* Tekst opcji w rozwijanej liście */
+.choice-box .menu-item {
+    -fx-background-color: #ffffff !important;
+    /* Wymuszenie białego tła opcji */
+    -fx-text-fill: #333333 !important;
+    /* Wymuszenie ciemnego tekstu */
+    -fx-font-size: 16px;
+}
+
+/* Podświetlona opcja */
+.choice-box .menu-item:focused {
+    -fx-background-color: #4ca1af !important;
+    /* Niebieskie podświetlenie */
+    -fx-text-fill: white !important;
+}
