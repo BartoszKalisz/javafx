@@ -22,20 +22,20 @@ public class TabTest extends ApplicationTest {
         stage.show();
     }
 
-    @Test
-    public void debugTabPane() {
-        // Pobieramy `TabPane`
-        TabPane tabPane = lookup(".tab-pane").query();
-        if (tabPane == null) {
-            System.out.println("TabPane not found!");
-            return;
-        }
+    // @Test
+    // public void debugTabPane() {
+    //     // Pobieramy `TabPane`
+    //     TabPane tabPane = lookup(".tab-pane").query();
+    //     if (tabPane == null) {
+    //         System.out.println("TabPane not found!");
+    //         return;
+    //     }
 
-        // Pobieramy wszystkie nazwy zakładek
-        List<String> tabNames = tabPane.getTabs().stream()
-                .map(Tab::getText) // Pobiera nazwy zakładek
-                .collect(Collectors.toList());
+    //     // Pobieramy wszystkie nazwy zakładek
+    //     List<String> tabNames = tabPane.getTabs().stream()
+    //             .map(Tab::getText) // Pobiera nazwy zakładek
+    //             .collect(Collectors.toList());
 
-        System.out.println("Found tab names: " + tabNames);
-    }
+    //     System.out.println("Found tab names: " + tabNames);
+    // }
 }

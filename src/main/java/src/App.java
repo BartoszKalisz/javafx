@@ -1,160 +1,314 @@
 package src;
 
 import java.io.File;
+import java.util.List;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class App extends Application {
+
+    private TableView<Product> productTable;
+    private TableView<Employee> employeeTable;
+    private ProductService productService = new ProductService();
+    private EmployeeService employeeService = new EmployeeService();
+    private TabPane tabPane;
+    private Tab addEditProductTab;
+    private boolean isEditMode = false;
+    private Product productToEdit = null;
+
     @Override
     public void start(Stage primaryStage) {
-        TabPane tabPane = new TabPane();
+        tabPane = new TabPane();
 
-        // --- Tab: Form ---
-        Tab formTab = new Tab("Form");
-        GridPane formLayout = new GridPane();
-        formLayout.setPadding(new Insets(30));  // Większy odstęp
-        formLayout.setVgap(15);
-        formLayout.setHgap(15);
-        formLayout.setAlignment(Pos.CENTER);
+        Tab productsTab = createProductsTab();
+        Tab employeesTab = createEmployeesTab();
+        employeesTab.setId("employeesTab");
 
-        Label nameLabel = new Label("Name:");
-        nameLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
-        TextField nameInput = new TextField();
-       
-        nameInput.setPromptText("Enter your name...");
-        nameInput.setStyle("-fx-font-size: 16px; -fx-pref-width: 300px;"); // Większe pole tekstowe
+        tabPane.getTabs().addAll(productsTab, employeesTab);
 
-        Button submitButton = new Button("Submit");
-        submitButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 18px;");
-        submitButton.setOnAction(e -> System.out.println("Submitted: " + nameInput.getText()));
+        Scene scene = new Scene(tabPane, 1040, 650);
+        scene.getStylesheets().add(new File("src/main/resources/style.css").toURI().toString());
 
-        formLayout.add(nameLabel, 0, 0);
-        formLayout.add(nameInput, 1, 0);
-        formLayout.add(submitButton, 1, 1);
-        formTab.setContent(formLayout);
-
-
-           // --- Tab: Buttons ---
-        Tab buttonTab = new Tab("Buttons");
-        VBox buttonLayout = new VBox(20);
-        buttonLayout.setPadding(new Insets(30));
-        buttonLayout.setAlignment(Pos.CENTER);
-
-        // Przycisk zmieniający napis
-        Button simpleButton = new Button("Click me!");
-        simpleButton.setStyle("-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-size: 20px; -fx-padding: 16px 32px;");
-        simpleButton.setOnAction(e -> {
-            Platform.runLater(() -> simpleButton.setText("Clicked!")); // Zapewniamy poprawną zmianę GUI
-            System.out.println("Button clicked!");
-        });
-
-        buttonLayout.getChildren().add(simpleButton);
-        buttonTab.setContent(buttonLayout);
-
-        // --- Tab: Lists ---
-        Tab listTab = new Tab("Lists");
-        VBox listLayout = new VBox(20);
-        listLayout.setPadding(new Insets(30));
-        listLayout.setAlignment(Pos.CENTER);
-
-        Label listLabel = new Label("Choose an option:");
-        listLabel.setStyle("-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #333333;");
-
-        ChoiceBox<String> choiceBox = new ChoiceBox<>();
-        choiceBox.getItems().addAll("Option 1", "Option 2", "Option 3");
-        choiceBox.setValue("Option 1");
-        choiceBox.setStyle("-fx-font-size: 20px; -fx-pref-width: 250px; -fx-pref-height: 40px;");
-
-        listLayout.getChildren().addAll(listLabel, choiceBox);
-        listTab.setContent(listLayout);
-
-
-
-        // --- Tab: Table ---
-        Tab tableTab = new Tab("Table");
-        VBox tableLayout = new VBox(15);
-        tableLayout.setPadding(new Insets(20));
-        tableLayout.setAlignment(Pos.CENTER);
-
-        /* Tworzenie tabeli */
-        TableView<String[]> table = new TableView<>();
-        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY); // Automatyczne dopasowanie kolumn
-
-        // Definiowanie kolumn
-        TableColumn<String[], String> col1 = new TableColumn<>("ID");
-        col1.setCellValueFactory(data -> new SimpleStringProperty(data.getValue()[0]));
-
-        TableColumn<String[], String> col2 = new TableColumn<>("Name");
-        col2.setCellValueFactory(data -> new SimpleStringProperty(data.getValue()[1]));
-
-        TableColumn<String[], String> col3 = new TableColumn<>("Age");
-        col3.setCellValueFactory(data -> new SimpleStringProperty(data.getValue()[2]));
-
-        // Dodanie kolumn do tabeli
-        table.getColumns().addAll(col1, col2, col3);
-
-        /* Dodanie przykładowych danych */
-        table.getItems().addAll(
-            new String[]{"1", "Bob", "30"},
-            new String[]{"2", "Charlie", "28"},
-            new String[]{"3", "Alice", "25"}
-        );
-
-        // Nagłówek
-        Label tableLabel = new Label("User Data Table");
-        tableLabel.setTextFill(Color.WHITE);
-        tableLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
-
-        // Dodanie elementów do układu
-        tableLayout.getChildren().addAll(tableLabel, table);
-        tableTab.setContent(tableLayout);
-
-
-        // Add all tabs
-        tabPane.getTabs().addAll(formTab, buttonTab, listTab, tableTab);
-
-        // 🎯 **Tworzenie sceny z większym oknem**
-        Scene scene = new Scene(tabPane, 1040, 650); // Powiększone okno
-
-        // ✅ **Dodanie arkusza stylów**
-        scene.getStylesheets().add(new File("src\\main\\resources\\style.css").toURI().toString());
-
-        // 🎯 **Ustawienie sceny w Stage**
-        primaryStage.setTitle("Styled Test Application");
+        primaryStage.setTitle("Store Management Application");
         primaryStage.setScene(scene);
         primaryStage.show();
     }
 
-    private void showPopup() {
-        Stage dialog = new Stage();
-        dialog.initModality(Modality.APPLICATION_MODAL);
-        dialog.setTitle("Dialog Window");
+    private Tab createProductsTab() {
+        Tab tab = new Tab("Products");
 
-        VBox layout = new VBox(15);
+        VBox layout = new VBox(10);
+        layout.setPadding(new Insets(20));
+        layout.setAlignment(Pos.TOP_CENTER);
+
+        Label label = new Label("Product Management");
+
+        productTable = new TableView<>();
+        productTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
+        TableColumn<Product, String> idCol = new TableColumn<>("ID");
+        idCol.setCellValueFactory(data -> new SimpleStringProperty(String.valueOf(data.getValue().getId())));
+
+        TableColumn<Product, String> typeCol = new TableColumn<>("Type");
+        typeCol.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCategory()));
+
+        TableColumn<Product, String> nameCol = new TableColumn<>("Name");
+        nameCol.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getName()));
+
+        TableColumn<Product, String> priceCol = new TableColumn<>("Price");
+        priceCol.setCellValueFactory(data -> new SimpleStringProperty(String.format("%.2f", data.getValue().getPrice())));
+
+        productTable.getColumns().addAll(idCol, typeCol, nameCol, priceCol);
+
+        Button addButton = new Button("Add");
+        Button editButton = new Button("Edit");
+        Button deleteButton = new Button("Delete");
+        ChoiceBox<String> priceFilter = new ChoiceBox<>();
+
+        priceFilter.setId("priceFilter");
+        productTable.setId("productTable");
+        addButton.setId("addButton");
+        editButton.setId("editButton");
+        deleteButton.setId("deleteButton");
+
+        addButton.setOnAction(e -> openAddEditProductTab(false, null));
+
+        editButton.setOnAction(e -> {
+            Product selected = productTable.getSelectionModel().getSelectedItem();
+            if (selected != null) {
+                openAddEditProductTab(true, selected);
+            }
+        });
+
+        deleteButton.setOnAction(e -> {
+            Product selected = productTable.getSelectionModel().getSelectedItem();
+            if (selected != null) {
+                productService.deleteProduct(selected.getId());
+                loadProducts();
+            }
+        });
+
+        priceFilter.getStyleClass().add("button-like");
+        priceFilter.getItems().addAll("All prices", "Below 20,000", "20,000 - 1,000,000", "Above 1,000,000");
+        priceFilter.setValue("All prices");
+        priceFilter.setOnAction(e -> applyProductPriceFilter(priceFilter.getValue()));
+
+        HBox buttonBox = new HBox(10, addButton, editButton, deleteButton, priceFilter);
+        buttonBox.setAlignment(Pos.CENTER);
+
+        layout.getChildren().addAll(label, productTable, buttonBox);
+        tab.setContent(layout);
+
+        loadProducts();
+
+        return tab;
+    }
+
+    private void openAddEditProductTab(boolean editMode, Product product) {
+        if (addEditProductTab != null && tabPane.getTabs().contains(addEditProductTab)) {
+            tabPane.getTabs().remove(addEditProductTab);
+        }
+
+        isEditMode = editMode;
+        productToEdit = product;
+
+        addEditProductTab = new Tab(editMode ? "Edit Product" : "Add Product");
+
+        VBox layout = new VBox(10);
         layout.setPadding(new Insets(20));
         layout.setAlignment(Pos.CENTER);
 
-        Label label = new Label("This is a dialog window.");
-        label.setTextFill(Color.DARKRED);
-        Button closeButton = new Button("Close");
-        closeButton.setStyle("-fx-background-color: #F44336; -fx-text-fill: white;");
-        closeButton.setOnAction(e -> dialog.close());
+        TextField typeField = new TextField();
+        typeField.setPromptText("Type");
+        typeField.setId("typeField");
 
-        layout.getChildren().addAll(label, closeButton);
+        TextField nameField = new TextField();
+        nameField.setPromptText("Name");
+        nameField.setId("nameField");
 
-        Scene scene = new Scene(layout, 300, 200); // Większe okienko
-        scene.getStylesheets().add(new File("src\\main\\resources\\style.css").toURI().toString());
-        dialog.setScene(scene);
-        dialog.showAndWait();
+        TextField priceField = new TextField();
+        priceField.setPromptText("Price");
+        priceField.setId("priceField");
+
+        if (editMode && product != null) {
+            typeField.setText(product.getCategory());
+            nameField.setText(product.getName());
+            priceField.setText(String.valueOf(product.getPrice()));
+        }
+
+        Button saveButton = new Button("Save");
+        saveButton.setId("saveButton");
+        saveButton.setOnAction(e -> {
+            try {
+                String type = typeField.getText();
+                String name = nameField.getText();
+                double price = Double.parseDouble(priceField.getText());
+
+                if (editMode && product != null) {
+                    product.setCategory(type);
+                    product.setName(name);
+                    product.setPrice(price);
+                    productService.updateProduct(product);
+                } else {
+                    productService.addProduct(new Product(0, type, name, price));
+                }
+
+                loadProducts();
+                tabPane.getTabs().remove(addEditProductTab);
+                tabPane.getTabs().stream()
+            .filter(tab -> "Products".equals(tab.getText()))
+            .findFirst()
+            .ifPresent(tabPane.getSelectionModel()::select);
+            } catch (NumberFormatException ex) {
+                showAlert("Invalid price value.");
+            }
+        });
+
+        Button cancelButton = new Button("Cancel");
+        cancelButton.setId("cancelButton");
+        cancelButton.setOnAction(e -> {
+    tabPane.getTabs().remove(addEditProductTab);
+
+    // 👇 Dodaj to, aby wrócić na zakładkę "Products"
+    tabPane.getTabs().stream()
+        .filter(tab -> "Products".equals(tab.getText()))
+        .findFirst()
+        .ifPresent(tabPane.getSelectionModel()::select);
+});
+
+        layout.getChildren().addAll(new Label("Type:"), typeField, new Label("Name:"), nameField,
+                new Label("Price:"), priceField, saveButton, cancelButton);
+
+        addEditProductTab.setContent(layout);
+        tabPane.getTabs().add(addEditProductTab);
+        tabPane.getSelectionModel().select(addEditProductTab);
+    }
+
+    private void applyProductPriceFilter(String selectedOption) {
+        List<Product> allProducts = productService.getAllProducts();
+        ObservableList<Product> filtered;
+        switch (selectedOption) {
+            case "Below 20,000" -> filtered = FXCollections.observableArrayList(allProducts.stream().filter(p -> p.getPrice() < 20000).toList());
+            case "20,000 - 1,000,000" -> filtered = FXCollections.observableArrayList(allProducts.stream().filter(p -> p.getPrice() >= 20000 && p.getPrice() <= 1000000).toList());
+            case "Above 1,000,000" -> filtered = FXCollections.observableArrayList(allProducts.stream().filter(p -> p.getPrice() > 1000000).toList());
+            default -> filtered = FXCollections.observableArrayList(allProducts);
+        }
+        productTable.setItems(filtered);
+    }
+
+    private void loadProducts() {
+        List<Product> products = productService.getAllProducts();
+        ObservableList<Product> data = FXCollections.observableArrayList(products);
+        productTable.setItems(data);
+    }
+
+    private Tab createEmployeesTab() {
+        Tab tab = new Tab("Employees");
+
+        VBox layout = new VBox(10);
+        layout.setPadding(new Insets(20));
+        layout.setAlignment(Pos.TOP_CENTER);
+
+        Label label = new Label("Employee Management");
+
+        employeeTable = new TableView<>();
+        employeeTable.setId("employeeTable");
+        employeeTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
+        TableColumn<Employee, String> idCol = new TableColumn<>("ID");
+        idCol.setCellValueFactory(data -> new SimpleStringProperty(String.valueOf(data.getValue().getId())));
+
+        TableColumn<Employee, String> firstNameCol = new TableColumn<>("First Name");
+        firstNameCol.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getFirstName()));
+
+        TableColumn<Employee, String> lastNameCol = new TableColumn<>("Last Name");
+        lastNameCol.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getLastName()));
+
+        TableColumn<Employee, String> positionCol = new TableColumn<>("Position");
+        positionCol.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getPosition()));
+
+        employeeTable.getColumns().addAll(idCol, firstNameCol, lastNameCol, positionCol);
+
+        Button detailsButton = new Button("Show Details");
+        detailsButton.setId("showDetailsButton");
+        detailsButton.setOnAction(e -> showEmployeeDetails());
+
+        HBox buttonBox = new HBox(10, detailsButton);
+        buttonBox.setAlignment(Pos.CENTER);
+
+        layout.getChildren().addAll(label, employeeTable, buttonBox);
+        tab.setContent(layout);
+
+        loadEmployees();
+
+        return tab;
+    }
+
+    private void showEmployeeDetails() {
+        Employee selected = employeeTable.getSelectionModel().getSelectedItem();
+        if (selected != null) {
+            Tab detailTab = new Tab("Employee Details: " + selected.getFirstName());
+
+            GridPane layout = new GridPane();
+            layout.setPadding(new Insets(30));
+            layout.setVgap(15);
+            layout.setHgap(20);
+            layout.setAlignment(Pos.CENTER_LEFT);
+
+            layout.addRow(0, createLabel("ID:"), createValueLabel(String.valueOf(selected.getId())));
+            layout.addRow(1, createLabel("First Name:"), createValueLabel(selected.getFirstName()));
+            layout.addRow(2, createLabel("Last Name:"), createValueLabel(selected.getLastName()));
+            layout.addRow(3, createLabel("Position:"), createValueLabel(selected.getPosition()));
+
+            Label phoneLabel = createValueLabel(selected.getPhoneNumber());
+            phoneLabel.setId("phoneText");
+            layout.addRow(4, createLabel("Phone:"), phoneLabel);
+
+            layout.addRow(5, createLabel("Address:"), createValueLabel(selected.getAddress()));
+
+            Button backButton = new Button("Back");
+            backButton.setId("backButton");
+            backButton.setOnAction(e -> tabPane.getTabs().remove(detailTab));
+            layout.add(backButton, 1, 6);
+
+            detailTab.setContent(layout);
+            tabPane.getTabs().add(detailTab);
+            tabPane.getSelectionModel().select(detailTab);
+        }
+    }
+
+    private Label createLabel(String text) {
+        Label label = new Label(text);
+        label.getStyleClass().add("detail-label");
+        return label;
+    }
+
+    private Label createValueLabel(String text) {
+        Label label = new Label(text);
+        label.getStyleClass().add("value-label");
+        return label;
+    }
+
+    private void loadEmployees() {
+        List<Employee> employees = employeeService.getAllEmployees();
+        ObservableList<Employee> data = FXCollections.observableArrayList(employees);
+        employeeTable.setItems(data);
+    }
+
+    private void showAlert(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 
     public static void main(String[] args) {

@@ -1,31 +1,28 @@
-/* Stonowane tło - gradient */
+/* -------------------
+   GłÓWNY STYL APLIKACJI
+-------------------- */
+
 .root {
     -fx-font-family: "Arial";
     -fx-background-color: linear-gradient(to bottom, #2193b0, #ebbe83);
-    /* Gradientowe tło */
 }
 
-/* Styl zakładek */
 .tab-pane {
     -fx-tab-min-width: 100px;
     -fx-tab-max-width: 150px;
 }
 
-/* Styl większych przycisków */
 .button {
     -fx-padding: 12px 24px;
-    /* Większe przyciski */
     -fx-font-size: 16px;
     -fx-background-radius: 10px;
 }
 
-/* Styl etykiet */
 .label {
     -fx-text-fill: white;
     -fx-font-size: 16px;
 }
 
-/* Większe pole tekstowe */
 .text-field {
     -fx-background-color: rgba(255, 255, 255, 0.9);
     -fx-text-fill: #333333;
@@ -34,20 +31,16 @@
     -fx-padding: 10px;
     -fx-font-size: 16px;
     -fx-pref-width: 250px;
-    /* Większa szerokość */
 }
 
-/* Styl tabeli */
 .table-view {
     -fx-background-color: rgba(255, 255, 255, 0.8);
     -fx-border-radius: 8px;
     -fx-border-color: #cccccc;
 }
 
-/* Styl nagłówków tabeli */
 .table-view .column-header-background {
     -fx-background-color: #4ca1af;
-    /* Kolor nagłówka tabeli */
 }
 
 .table-view .column-header {
@@ -56,41 +49,85 @@
     -fx-font-weight: bold;
 }
 
-/* Naprawiony styl głównej listy wyboru (ChoiceBox) */
 .choice-box {
     -fx-background-color: #ffffff;
-    /* Białe tło */
     -fx-text-fill: #333333;
     -fx-border-radius: 5px;
     -fx-border-color: #888888;
     -fx-font-size: 16px;
 }
 
-/* Naprawiona widoczność tekstu w wyborze opcji */
 .choice-box .label {
     -fx-text-fill: #333333 !important;
-    /* Ciemny tekst */
     -fx-font-weight: bold;
 }
 
-/* Opcje rozwijanego menu */
 .choice-box .context-menu {
     -fx-background-color: #ffffff !important;
-    /* Wymuszenie białego tła */
 }
 
-/* Tekst opcji w rozwijanej liście */
 .choice-box .menu-item {
     -fx-background-color: #ffffff !important;
-    /* Wymuszenie białego tła opcji */
     -fx-text-fill: #333333 !important;
-    /* Wymuszenie ciemnego tekstu */
     -fx-font-size: 16px;
 }
 
-/* Podświetlona opcja */
 .choice-box .menu-item:focused {
     -fx-background-color: #4ca1af !important;
-    /* Niebieskie podświetlenie */
     -fx-text-fill: white !important;
+}
+
+
+/* -------------------
+   STYL WIDOKU SZCZEGÓŁÓW PRACOWNIKA
+-------------------- */
+
+/* Tło szczegółów (delikatne) */
+.detail-background {
+    -fx-background-color: linear-gradient(to bottom right, #eef9ff, #d7f0f9);
+    -fx-background-radius: 12px;
+    -fx-padding: 30px;
+    -fx-spacing: 18px;
+}
+
+/* Etykieta nazwy pola */
+.detail-label {
+    -fx-font-size: 20px;
+    -fx-text-fill: #2b2b2b;
+    -fx-font-weight: bold;
+}
+
+/* Wartość pola */
+.value-label {
+    -fx-font-size: 22px;
+    -fx-text-fill: #007ACC;
+    -fx-font-weight: bold;
+}
+
+/* Przyciski (Back) */
+.back-button {
+    -fx-padding: 12px 24px;
+    -fx-font-size: 18px;
+    -fx-background-color: #4ca1af;
+    -fx-text-fill: white;
+    -fx-background-radius: 8px;
+}
+
+/* Styl dla ikonek */
+.icon {
+    -fx-font-size: 22px;
+    -fx-text-fill: #4ca1af;
+    -fx-font-weight: bold;
+}
+
+/* Styl ChoiceBox jak przycisk */
+.choice-box.button-like {
+    -fx-background-color: linear-gradient(to bottom, #f2f2f2, #d6d6d6);
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-border-color: #999999;
+    -fx-padding: 8 16;
+    -fx-font-size: 16px;
+    -fx-font-weight: normal;
+    -fx-effect: dropshadow(one-pass-box, rgba(0, 0, 0, 0.2), 2, 0, 1, 1);
 }
